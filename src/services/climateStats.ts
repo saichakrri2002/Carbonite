@@ -110,7 +110,7 @@ export async function getUserStatistics(userId: string): Promise<UserStatistics 
       .from('user_stats_summary')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (!prodError && prodData) {
       return {
@@ -130,7 +130,7 @@ export async function getUserStatistics(userId: string): Promise<UserStatistics 
       .from('user_statistics')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (!prevError && prevData) {
       return {
@@ -162,7 +162,7 @@ export async function getUserStatsSummary(userId: string): Promise<UserStatsSumm
       .from('user_stats_summary')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (error || !data) return null;
 
@@ -311,7 +311,7 @@ export async function getGlobalStatsRollup(rollupKey: string = 'global_all_time'
       .from('global_stats_rollup')
       .select('*')
       .eq('rollup_key', rollupKey)
-      .single();
+      .maybeSingle();
 
     if (error || !data) return null;
 
@@ -338,7 +338,7 @@ async function calculateGlobalStatisticsFromExisting(): Promise<GlobalStatistics
       .from('global_emissions')
       .select('total_lbs_saved')
       .eq('id', 1)
-      .single();
+      .maybeSingle();
 
     // Get user count
     const { count: userCount } = await supabase

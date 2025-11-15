@@ -25,9 +25,9 @@ export async function getUserTotal(userId: string): Promise<number> {
       .from('user_stats')
       .select('total_lbs, total_emissions_lbs')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
-    if (error) {
+    if (error || !data) {
       // If table doesn't exist, calculate from user_actions
       return await calculateUserTotalFromActions(userId);
     }
@@ -90,9 +90,9 @@ export async function getGlobalTotal(): Promise<number> {
       .from('global_emissions')
       .select('total_lbs, total_lbs_saved')
       .eq('id', 1)
-      .single();
+      .maybeSingle();
 
-    if (error) {
+    if (error || !data) {
       // If table doesn't exist, calculate from user_stats
       return await calculateGlobalTotalFromUserStats();
     }

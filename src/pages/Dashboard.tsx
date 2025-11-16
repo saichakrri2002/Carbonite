@@ -31,7 +31,7 @@ export default function Dashboard() {
         {
           event: '*',
           schema: 'public',
-          table: 'user_statistics',
+          table: 'user_stats',
           filter: `user_id=eq.${profile?.id}`,
         },
         () => {
@@ -43,7 +43,7 @@ export default function Dashboard() {
         {
           event: '*',
           schema: 'public',
-          table: 'global_statistics',
+          table: 'global_emissions',
         },
         () => {
           loadDashboardData();

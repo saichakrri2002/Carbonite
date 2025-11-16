@@ -34,7 +34,10 @@ export default function Actions() {
   };
 
   const logAction = async (actionId: string, points: number, emissions: number) => {
-    if (!profile) return;
+    if (!profile) {
+      alert('Please log in first');
+      return;
+    }
 
     setLogging(actionId);
     try {
@@ -46,9 +49,12 @@ export default function Actions() {
         custom_emissions_saved: emissionsLbs,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Action insert error:', error);
+        throw new Error(`Failed to log action: ${error.message}`);
+      }
 
-      await supabase
+      const { error: updateError } = await supabase
         .from('profiles')
         .update({
           total_points: profile.total_points + points,
@@ -56,11 +62,16 @@ export default function Actions() {
         })
         .eq('id', profile.id);
 
+      if (updateError) {
+        console.error('Profile update error:', updateError);
+      }
+
       await refreshProfile();
       alert('Action logged successfully!');
     } catch (error) {
-      console.error('Error logging action:', error);
-      alert('Failed to log action');
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Error logging action:', errorMsg);
+      alert(`Failed to log action: ${errorMsg}`);
     } finally {
       setLogging(null);
     }

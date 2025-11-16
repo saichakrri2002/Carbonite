@@ -52,6 +52,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           const profileData = await fetchProfile(session.user.id);
           setProfile(profileData);
+          console.log('Auth: Session loaded for user', session.user.email);
+        } else {
+          console.log('Auth: No session found');
         }
 
         setLoading(false);
@@ -68,8 +71,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           const profileData = await fetchProfile(session.user.id);
           setProfile(profileData);
+          console.log('Auth: State changed - user authenticated', session.user.email);
         } else {
           setProfile(null);
+          console.log('Auth: State changed - user logged out');
         }
       })();
     });
